@@ -13,6 +13,7 @@ var yFood;
 
 var gameScale = 15;
 var isGameOver = false;
+var finalScore = 0;
 var xMax;
 var yMax;
 
@@ -76,7 +77,8 @@ function moveSnake(){
 		if ( (xSnake + xDir > xMax) || 
 			 (xSnake + xDir < 0) ||
 			 (ySnake + yDir > yMax) ||
-			 (ySnake + yDir < 0) ) 
+			 (ySnake + yDir < 0) || 
+			 isTailHit(xSnake + xDir, ySnake + yDir) ) 
 		{ // You are dead!
 			gameOver();
 		} else { // move normally if you haven't run into a wall
@@ -96,6 +98,9 @@ function moveSnake(){
 
 
 function gameOver() {
+	if (isGameOver == false) { // Only set final score once.
+		finalScore = sizeSnake;
+	}
 	isGameOver = true;
 }
 
@@ -112,7 +117,8 @@ function drawHUD() {
 		push();
 		textSize(32);
 		fill(200,100,100);
-		text("Game Over! You Loose! Good day sir!",width/6,height/2, width*2/3, height/3);
+		text("Game Over! You Loose! Good day sir!" + "  Final Score: " + finalScore
+			,width/6,height/2, width*2/3, height/3);
 		pop();
 	} 
 }
@@ -154,7 +160,7 @@ function updateTail() {
 
 			for (let i = xTail.length-1; i>0; --i) {
 				xTail[i] = xTail[i-1];
-				yTail[i] = yTail[i+1];
+				yTail[i] = yTail[i-1];
 			}
 
 			xTail[0] = xSnake;
@@ -178,4 +184,14 @@ function drawTail() {
 	}
 }
 
+function isTailHit(xPos,yPos) {
+	isHit = false; // Initial Assumption
+
+	for (let i = 0; i<xTail.length; ++i) {
+		if (xTail[i] == xPos && yTail[i] == yPos) {
+			isHit = true;
+		}
+	}
+	return isHit;
+}
 

@@ -55,11 +55,24 @@ function drawSnake() {
 }
 
 function moveSnake(){
-	if (frameCount % 6 == 0) {
-		xSnake = xSnake + xDir;
-		ySnake = ySnake + yDir;	
+	var speedDivisor = 6;
+	var xMax = Math.floor(width/gameScale);
+	var yMax = Math.floor(height/gameScale);
+
+	if (frameCount % speedDivisor == 0) {
+		// gameOver on wall collision
+		if ( (xSnake + xDir > xMax) || 
+			 (xSnake + xDir < 0) ||
+			 (ySnake + yDir > yMax) ||
+			 (ySnake + yDir < 0) ) 
+		{ // You are dead!
+			gameOver();
+		} else { // move normally if you haven't run into a wall
+			xSnake = xSnake + xDir;
+			ySnake = ySnake + yDir;		
+		}
+		
 	}
-	
 }
 
 

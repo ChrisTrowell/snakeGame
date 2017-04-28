@@ -5,6 +5,9 @@ var xDir = 1;
 var yDir = 0;
 var sizeSnake = 1;
 
+var xTail = [];
+var yTail = [];
+
 var xFood;
 var yFood;
 
@@ -27,6 +30,7 @@ function draw() { // Runs constantly, at the framerate
 	keyInput();
 	moveSnake();
 	drawFood();
+	drawTail();
 	drawSnake();
 	drawHUD();
 }
@@ -76,6 +80,7 @@ function moveSnake(){
 		{ // You are dead!
 			gameOver();
 		} else { // move normally if you haven't run into a wall
+			updateTail();
 			xSnake = xSnake + xDir;
 			ySnake = ySnake + yDir;		
 		}
@@ -127,4 +132,50 @@ function drawFood() {
 function eatFood() {
 	sizeSnake = sizeSnake + 1;
 	createFood();
+	createTail();
 }
+
+
+function createTail() {
+	if(sizeSnake > 1) {
+		// Add body segments until correct length
+		while( xTail.length < sizeSnake - 1) {
+			xTail.unshift(xSnake);
+			yTail.unshift(ySnake);
+		}
+	}
+}
+
+
+function updateTail() {
+	if(sizeSnake > 1) {
+
+		if(xTail.length == yTail.length) {
+
+			for (let i = xTail.length-1; i>0; --i) {
+				xTail[i] = xTail[i-1];
+				yTail[i] = yTail[i+1];
+			}
+
+			xTail[0] = xSnake;
+			yTail[0] = ySnake;
+
+
+		}
+
+	}
+}
+
+
+function drawTail() {
+	if (xTail.length > 0 && xTail.length == yTail.length) {
+		for (let i = 0; i<xTail.length;  ++i) {
+			push();
+			fill(230,180, 50); // orange?
+			rect(xTail[i] * gameScale, yTail[i] * gameScale, gameScale, gameScale);
+			pop();
+		}
+	}
+}
+
+

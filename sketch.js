@@ -5,6 +5,7 @@ var xDir = 1;
 var yDir = 0;
 
 var gameScale = 15;
+var isGameOver = false;
 
 function setup() { // Runs once
 	frameRate(60);
@@ -14,8 +15,10 @@ function setup() { // Runs once
 
 function draw() { // Runs constantly, at the framerate
 	background(0);
+	keyInput();
 	moveSnake();
 	drawSnake();
+	drawHUD();
 }
 
 
@@ -26,16 +29,17 @@ function keyInput(){
 		
 		if(keyCode === UP_ARROW) {
 			// Code to run when we press UP_ARROW
-			// player.move(0,-5)
+			xDir = 0;
+			yDir = -1;
 		} else if (keyCode === DOWN_ARROW) {
-			// player.move(0,5)
-		} 
-
-
-		if (keyCode === LEFT_ARROW) {
-			// player.move(-5,0)
+			xDir = 0;
+			yDir = 1;
+		} else if (keyCode === LEFT_ARROW) {
+			xDir = -1;
+			yDir = 0;
 		} else if (keyCode === RIGHT_ARROW) {
-			// player.move(5,0)
+			xDir = 1;
+			yDir = 0;
 		}
 
 	}
@@ -44,8 +48,10 @@ function keyInput(){
 
 
 function drawSnake() {
+	push();
 	fill(0,255,0);
 	rect(xSnake*gameScale, ySnake*gameScale, gameScale, gameScale);
+	pop();
 }
 
 function moveSnake(){
@@ -54,4 +60,21 @@ function moveSnake(){
 		ySnake = ySnake + yDir;	
 	}
 	
+}
+
+
+
+function gameOver() {
+	isGameOver = true;
+}
+
+function drawHUD() {
+	
+	if (isGameOver) {
+		push();
+		textSize(32);
+		fill(200,100,100);
+		text("Game Over! You Loose! Good day sir!",width/6,height/2, width*2/3, height/3);
+		pop();
+	}
 }

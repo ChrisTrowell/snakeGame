@@ -3,13 +3,22 @@ var ySnake = 1;
 // Direction values are 1 or -1, and one must always be == 0
 var xDir = 1;
 var yDir = 0;
+var sizeSnake = 1;
+
+var xFood;
+var yFood;
 
 var gameScale = 15;
 var isGameOver = false;
+var xMax;
+var yMax;
 
 function setup() { // Runs once
 	frameRate(60);
 	createCanvas(500,500);
+	xMax = Math.floor(width/gameScale);
+	yMax = Math.floor(height/gameScale);
+	createFood();
 
 }
 
@@ -17,6 +26,7 @@ function draw() { // Runs constantly, at the framerate
 	background(0);
 	keyInput();
 	moveSnake();
+	drawFood();
 	drawSnake();
 	drawHUD();
 }
@@ -56,8 +66,6 @@ function drawSnake() {
 
 function moveSnake(){
 	var speedDivisor = 6;
-	var xMax = Math.floor(width/gameScale);
-	var yMax = Math.floor(height/gameScale);
 
 	if (frameCount % speedDivisor == 0) {
 		// gameOver on wall collision
@@ -71,6 +79,11 @@ function moveSnake(){
 			xSnake = xSnake + xDir;
 			ySnake = ySnake + yDir;		
 		}
+
+		// Check if we are on the food
+		if ( (xSnake == xFood) && (ySnake == yFood) ) {
+			eatFood();
+		}
 		
 	}
 }
@@ -82,12 +95,36 @@ function gameOver() {
 }
 
 function drawHUD() {
-	
+
+	push();
+	textSize(22);
+	fill(200,200,200);
+	text("Score: " + sizeSnake ,20,20);
+	pop();
+
+
 	if (isGameOver) {
 		push();
 		textSize(32);
 		fill(200,100,100);
 		text("Game Over! You Loose! Good day sir!",width/6,height/2, width*2/3, height/3);
 		pop();
-	}
+	} 
+}
+
+function createFood() {
+	xFood = Math.floor(Math.random()*xMax);
+	yFood = Math.floor(Math.random()*yMax);
+}
+
+function drawFood() {
+	push()
+	fill(100,100,255);
+	rect(xFood*gameScale, yFood*gameScale, gameScale, gameScale);
+	pop()
+}
+
+function eatFood() {
+	sizeSnake = sizeSnake + 1;
+	createFood();
 }
